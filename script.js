@@ -1,0 +1,13 @@
+const menu = document.querySelector('.menu');
+const nav = document.querySelector('.nav-links');
+menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); menu.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú'); });
+nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => nav.classList.remove('open')));
+const reveal = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); reveal.unobserve(entry.target); } }), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(element => reveal.observe(element));
+const box = document.querySelector('.lightbox');
+const boxImage = box.querySelector('img');
+document.querySelectorAll('[data-lightbox]').forEach(item => item.addEventListener('click', () => { boxImage.src = item.dataset.lightbox; boxImage.alt = item.querySelector('img').alt; box.querySelector('p').textContent = item.dataset.caption; box.classList.add('open'); box.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }));
+const close = () => { box.classList.remove('open'); box.setAttribute('aria-hidden', 'true'); boxImage.src = ''; document.body.style.overflow = ''; };
+box.querySelector('button').addEventListener('click', close);
+box.addEventListener('click', event => { if (event.target === box) close(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
